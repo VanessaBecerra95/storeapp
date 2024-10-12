@@ -4,7 +4,14 @@
 
 @section('content')
 <div class="container mx-auto mt-10">
-    <h1 class="text-2xl font-bold mb-5">Resultados de Búsqueda</h1>
+    <h1 class="text-2xl font-bold mb-5">
+        Resultados de Búsqueda que contenga la palabra:
+        @if(!empty($searchTerm))
+        {{ $searchTerm }}
+        @else
+        (Todos los productos)
+        @endif
+    </h1>
 
     @if(isset($message))
     <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">

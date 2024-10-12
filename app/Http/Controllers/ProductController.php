@@ -37,7 +37,7 @@ class ProductController extends Controller
             'sale_price' => 'required|numeric|min:1',
             'description' => self::VALIDATION_RULE_REQUIRED_FILLED,
         ], [
-            'code.unique' => 'El código ingresado ya está en uso. Por favor, utiliza un código diferente.', // Mensaje personalizado
+            'code.unique' => 'El código ingresado ya está en uso. Por favor, utiliza un código diferente.',
         ]);
 
         Product::create($request->all());
@@ -64,27 +64,14 @@ class ProductController extends Controller
         $branch = $request->input('branch');
 
 
+        $searchTerm = $code ?: $name ?: '';
+
         if (empty($code) && empty($name)) {
             return view('products.search-results', [
                 'products' => [],
                 'searchParams' => $request->all(),
-                'message' => 'Falta añadir los campos requeridos: código y nombre.',
-            ]);
-        }
-
-        $missingFields = [];
-        if (empty($code)) {
-            $missingFields[] = 'código';
-        }
-        if (empty($name)) {
-            $missingFields[] = 'nombre';
-        }
-
-        if (!empty($missingFields)) {
-            return view('products.search-results', [
-                'products' => [],
-                'searchParams' => $request->all(),
-                'message' => 'Falta añadir el campo requerido: ' . implode(' y ', $missingFields) . '.',
+                'message' => 'Por favor, ingrese al menos un código o un nombre para buscar.',
+                'searchTerm' => $searchTerm,
             ]);
         }
 
@@ -108,7 +95,8 @@ class ProductController extends Controller
             return view('products.search-results', [
                 'products' => [],
                 'searchParams' => $request->all(),
-                'message' => 'No se encontraron productos con los criterios de búsqueda especificados.',
+                'message' => 'No se encontraron productos',
+                'searchTerm' => $searchTerm,
             ]);
         }
 
@@ -116,6 +104,7 @@ class ProductController extends Controller
             'products' => $products,
             'searchParams' => $request->all(),
             'message' => null,
+            'searchTerm' => $searchTerm,
         ]);
     }
 }
