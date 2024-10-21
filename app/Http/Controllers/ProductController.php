@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -13,7 +15,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('is_active', true)->get();
         return view('products.index', compact('products'));
     }
 
@@ -106,5 +108,50 @@ class ProductController extends Controller
             'message' => null,
             'searchTerm' => $searchTerm,
         ]);
+    }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.edit', compact('product'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'sale_price' => 'required|numeric|min:0',
+                'description' => 'nullable|string',
+            ]);
+
+            $product->update($validatedData);
+
+            return redirect()->route('products.index')
+                ->with('success', 'Producto actualizado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->with('error', 'Ocurrió un error al actualizar el producto.');
+        }
+    }
+
+    public function confirmDelete($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.confirm-delete', compact('product'));
+    }
+
+    public function deactivate(Request $request, $id)
+    {
+        try {
+            $product = Product::findOrFail($id);
+            $product->is_active = false;
+            $product->save();
+
+            return redirect()->route('products.index')->with('success', 'Producto desactivado correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->with('error', 'Ocurrió un error al desactivar el producto.');
+        }
     }
 }

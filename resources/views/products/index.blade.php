@@ -32,6 +32,7 @@
                 <th class="py-2 px-4 border-b">Descripción</th>
                 <th class="py-2 px-4 border-b">Cantidad</th>
                 <th class="py-2 px-4 border-b">Precio de Venta</th>
+                <th class="py-2 px-4 border-b">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +46,14 @@
                 <td class="py-2 px-4 border-b">{{ $product->description }}</td>
                 <td class="py-2 px-4 border-b">{{ $product->quantity }}</td>
                 <td class="py-2 px-4 border-b">{{ $product->sale_price }}</td>
+                <td class="py-2 px-4 border-b space-x-4">
+                    <a href="{{ route('products.edit', $product->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded text-xs">
+                        Actualizar
+                    </a>
+                    <a href="{{ route('products.confirm-delete', $product->id) }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded text-xs">
+                        Eliminar
+                    </a>
+                </td>
             </tr>
             @endforeach
         </tbody>
