@@ -77,7 +77,7 @@ class ProductController extends Controller
             ]);
         }
 
-        $query = Product::query();
+        $query = Product::where('is_active', true);
 
         if ($code) {
             $query->where('code', 'like', "%{$code}%");
@@ -124,15 +124,21 @@ class ProductController extends Controller
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
                 'sale_price' => 'required|numeric|min:0',
-                'description' => 'nullable|string',
+                'description' => 'required|string',
             ]);
 
             $product->update($validatedData);
 
             return redirect()->route('products.index')
                 ->with('success', 'Producto actualizado correctamente.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->route('products.edit', $id)
+                ->withErrors($e->validator)
+                ->withInput();
         } catch (\Exception $e) {
-            return redirect()->route('products.index')->with('error', 'Ocurrió un error al actualizar el producto.');
+            return redirect()->route('products.index')
+                ->with('error', 'Ocurrió un error al actualizar el producto.')
+                ->withInput();
         }
     }
 
@@ -149,9 +155,9 @@ class ProductController extends Controller
             $product->is_active = false;
             $product->save();
 
-            return redirect()->route('products.index')->with('success', 'Producto desactivado correctamente.');
+            return redirect()->route('products.index')->with('success', 'Producto eliminado correctamente.');
         } catch (\Exception $e) {
-            return redirect()->route('products.index')->with('error', 'Ocurrió un error al desactivar el producto.');
+            return redirect()->route('products.index')->with('error', 'Ocurrió un error al borrar el producto.');
         }
     }
 }

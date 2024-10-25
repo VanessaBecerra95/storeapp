@@ -40,6 +40,10 @@
                         <span class="font-medium text-gray-500">Precio de Venta:</span>
                         <span>${{ number_format($product->sale_price, 2) }}</span>
                     </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-500">Descripción:</span>
+                        <span>{{ $product->description }}</span>
+                    </div>
                 </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right space-x-3">

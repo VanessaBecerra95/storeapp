@@ -187,10 +187,11 @@ return [
         'category' => 'categoría',
         'branch' => 'sucursal',
         'description' => 'descripción',
-        'price' => 'precio',
+        'sale_price' => 'precio',
         'email' => 'correo',
         'password' => 'contraseña',
         'quantity' => 'cantidad',
+
     ],
 
 ];
